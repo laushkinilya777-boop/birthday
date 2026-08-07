@@ -1,0 +1,16 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^npm run lint$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^npm install --save-dev eslint@8\\.57\\.0$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^npm install --save-dev eslint-config-next@14\\.2\\.5$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
