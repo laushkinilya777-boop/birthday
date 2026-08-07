@@ -5,12 +5,13 @@
 ## Запуск
 
 1. Скопируй `.env.local.example` в `.env.local`.
-2. Установи `RESEND_API_KEY` и `TO_EMAIL`.
-3. Установи зависимости:
+2. Установи `RESEND_API_KEY`, `TO_EMAIL` и `FROM_EMAIL`.
+3. Для тестов Resend можно использовать `onboarding@resend.dev`.
+4. Установи зависимости:
    ```bash
    npm install
    ```
-4. Запусти проект:
+5. Запусти проект:
    ```bash
    npm run dev
    ```
