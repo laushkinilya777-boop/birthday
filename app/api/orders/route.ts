@@ -35,7 +35,8 @@ export async function POST(req: Request) {
     const parsed = CreateSchema.parse(body);
 
     const session = await getServerSession(authOptions as any);
-    if (!session?.user?.id) {
+    const userId = (session as any)?.user?.id as string | undefined;
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -49,7 +50,7 @@ export async function POST(req: Request) {
       district: parsed.district,
       address: parsed.address,
       urgency: parsed.urgency || 'NORMAL',
-      authorId: session.user.id as string
+      authorId: userId
     } });
     return NextResponse.json(order);
   } catch (err) {

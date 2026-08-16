@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../lib/auth';
 import { prisma } from '../../lib/prisma';
@@ -6,7 +8,8 @@ import SignOutClient from './SignOutClient';
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions as any);
-  if (!session?.user?.email) {
+  const userEmail = (session as any)?.user?.email as string | undefined;
+  if (!userEmail) {
     return (
       <div className="min-h-screen p-6">
         <p>Вы не вошли. <Link href="/auth/signin" className="text-indigo-500">Войти</Link></p>
@@ -14,7 +17,7 @@ export default async function ProfilePage() {
     );
   }
 
-  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  const user = await prisma.user.findUnique({ where: { email: userEmail } });
   if (!user) {
     return <div className="min-h-screen p-6">Пользователь не найден</div>;
   }

@@ -48,6 +48,7 @@ model Order {
   author          User         @relation(fields: [authorId], references: [id], name: "authorOrders")
   images          OrderImage[]
   applications    Application[]
+  reviews         Review[]
   chat            Chat?
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt

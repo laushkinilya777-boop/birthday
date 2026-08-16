@@ -1,8 +1,10 @@
-import { prisma } from '../../../../lib/prisma';
-import Link from 'next/link';
-import dynamic from 'next/dynamic';
+export const dynamic = 'force-dynamic';
 
-const ApplyClient = dynamic(() => import('./ApplyClient'), { ssr: false });
+import { prisma } from '../../../lib/prisma';
+import Link from 'next/link';
+import nextDynamic from 'next/dynamic';
+
+const ApplyClient = nextDynamic(() => import('./ApplyClient'), { ssr: false });
 
 export default async function OrderPage({ params }: { params: { id: string } }) {
   const order = await prisma.order.findUnique({ where: { id: params.id }, include: { author: true } });
