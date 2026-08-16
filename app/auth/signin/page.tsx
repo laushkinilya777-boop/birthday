@@ -24,6 +24,9 @@ export default function SignInPage() {
         <input {...register('email')} placeholder="Email" className="w-full rounded-md p-3 text-black" />
         <input {...register('password')} type="password" placeholder="Пароль" className="w-full rounded-md p-3 text-black" />
         <button type="submit" className="w-full rounded-md bg-indigo-600 px-4 py-3 text-white">Войти</button>
+        <div className="text-center text-sm text-slate-300">
+          Нет аккаунта? <a href="/auth/signup" className="text-indigo-300 underline">Зарегистрироваться</a>
+        </div>
       </form>
     </div>
   );

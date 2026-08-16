@@ -1,8 +1,13 @@
-'use client';
-
 import Link from 'next/link';
+import { prisma } from '../../lib/prisma';
 
-export default function OrdersPage() {
+export default async function OrdersPage() {
+  // server component - fetch orders from DB
+  const orders = await prisma.order.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: { author: true }
+  });
+
   return (
     <div className="min-h-screen p-6">
       <header className="mb-6 flex items-center justify-between">
@@ -11,31 +16,24 @@ export default function OrdersPage() {
       </header>
 
       <div className="space-y-4">
-        <div className="rounded-lg border p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-sm text-slate-500">🔴 Срочно</div>
-              <h2 className="text-lg font-semibold">Вынести 5 шкафов</h2>
-              <div className="mt-2 text-sm text-slate-600">25 000 ₸ · Караганда · Сегодня</div>
-            </div>
-            <div>
-              <button className="rounded-md bg-green-500 px-3 py-2 text-white">Откликнуться</button>
+        {orders.map((o) => (
+          <div key={o.id} className="rounded-lg border p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-slate-500">{o.urgency === 'NORMAL' ? 'Обычная' : '🔴 Срочно'}</div>
+                <h2 className="text-lg font-semibold">{o.title}</h2>
+                <div className="mt-2 text-sm text-slate-600">{o.price} ₸ · {o.city} · {new Date(o.createdAt).toLocaleDateString()}</div>
+              </div>
+              <div>
+                <Link href={`/orders/${o.id}`} className="rounded-md bg-indigo-600 px-3 py-2 text-white">Подробнее</Link>
+              </div>
             </div>
           </div>
-        </div>
+        ))}
 
-        <div className="rounded-lg border p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-sm text-slate-500">🚚</div>
-              <h2 className="text-lg font-semibold">Разгрузить газель</h2>
-              <div className="mt-2 text-sm text-slate-600">12 000 ₸ · Караганда · Через 2 часа</div>
-            </div>
-            <div>
-              <button className="rounded-md bg-green-500 px-3 py-2 text-white">Откликнуться</button>
-            </div>
-          </div>
-        </div>
+        {orders.length === 0 && (
+          <div className="rounded-lg border p-6 text-center text-slate-500">Пока нет заказов. Создайте первый!</div>
+        )}
       </div>
     </div>
   );
