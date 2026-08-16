@@ -1,39 +1,42 @@
-# Birthday Tribute
+# DoWorkHere (DWH) — проект
 
-Мобильный поздравительный лендинг на Next.js 14, TypeScript и Tailwind CSS.
+Этот репозиторий начнёт трансформацию существующего поздравительного лендинга в минимально работающее приложение-маркетплейс DoWorkHere (DWH).
 
-## Запуск
+Цель текущей ветки: scaffold и первичная реализация PHASE 1 — подготовка инфраструктуры для DWH (Next.js App Router, TypeScript, Tailwind, Prisma, Auth).
 
-1. Скопируй `.env.local.example` в `.env.local`.
-2. Установи `RESEND_API_KEY`, `TO_EMAIL` и `FROM_EMAIL`.
-3. Для тестов Resend можно использовать `onboarding@resend.dev`.
-4. Установи зависимости:
+Быстрый старт для разработки
+
+1. Скопируй `.env.local.example` в `.env.local` и заполните переменные (DATABASE_URL, NEXTAUTH_SECRET и пр.).
+2. Установи зависимости:
    ```bash
    npm install
    ```
-5. Запусти проект:
+3. Сгенерируй Prisma клиент и сделай миграцию (Postgres должен быть доступен):
+   ```bash
+   npm run prisma:generate
+   npm run db:migrate
+   npm run db:seed
+   ```
+4. Запусти проект:
    ```bash
    npm run dev
    ```
 
-### Resend email setup
+Важно
 
-Если Resend возвращает ошибку отправки, убедись, что в `.env.local` настроены:
+- Для полноценной работы нужно Postgres (локально в Docker или удалённый). В `.env.local.example` указан пример DATABASE_URL.
+- Не хранить реальные секреты в Git.
 
-- `RESEND_API_KEY`
-- `TO_EMAIL`
-- `FROM_EMAIL` (если отправительская почта должна быть верифицирована в Resend)
+Краткое описание текущей реализации
 
-## Особенности
+- Prisma schema с моделями User, Order, OrderImage, Application, Chat, Message, Review, Notification (`prisma/schema.prisma`).
+- Seed-скрипт (`prisma/seed.ts`) создаёт несколько демонстрационных пользователей и заказов.
+- NextAuth (Credentials) настроен в `app/api/auth/[...nextauth]/route.ts`.
+- Простые страницы: Landing (`app/page.tsx`), Orders (`app/orders`), Create Order (`app/orders/create`).
 
-- premium glassmorphism
-- мягкие кинематографичные анимации
-- интерактивная галерея и пожелания
-- Resend API для отправки желания
-- музыкальный плеер и конфетти
+Дальше (план на PHASE 2+)
 
-Замена музыки:
+- Реализовать регистрацию, профили, CRUD для заказов, отклики, выбор исполнителя, чат, завершение заказа, отзывы и рейтинги.
+- Покрыть серверную валидацию (Zod), авторизацию и транзакции Prisma.
 
-Чтобы заменить музыку, просто удалите birthday.mp3 и положите в папку /public/music/ новый файл с таким же названием.
-Никаких изменений в коде не требуется.
-- адаптирован для мобильного просмотра
+Если готовы, продолжу реализацию следующих этапов: Auth UI и регистрации → Orders CRUD → Applications → Chat.
