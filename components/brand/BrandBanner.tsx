@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-export default function BrandBanner({ src = '/brand/logo-banner.svg', alt = 'DoWorkHere' }: { src?: string; alt?: string }) {
+export default function BrandBanner({ src = '/brand/logo-banner.png', alt = 'DoWorkHere' }: { src?: string; alt?: string }) {
   return (
     <div className="flex items-center justify-center w-full">
       <div className="brand-banner" style={{ width: 418, height: 218 }}>

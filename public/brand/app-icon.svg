@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="290" height="225" viewBox="0 0 290 225">
-  <rect width="100%" height="100%" rx="36" fill="#ffffff" />
-  <g transform="translate(36,24)">
-    <circle cx="60" cy="60" r="46" fill="#7C3AED" />
-    <text x="140" y="72" font-family="Poppins, sans-serif" font-size="28" fill="#111827" font-weight="700">DWH</text>
-  </g>
-</svg>

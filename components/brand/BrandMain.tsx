@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-export default function BrandMain({ src = '/brand/logo-main.svg', alt = 'DoWorkHere' }: { src?: string; alt?: string }) {
+export default function BrandMain({ src = '/brand/logo-main.png', alt = 'DoWorkHere' }: { src?: string; alt?: string }) {
   return (
     <div className="w-full flex justify-center">
       <div className="brand-main-container" style={{ maxWidth: 710, maxHeight: 483 }}>

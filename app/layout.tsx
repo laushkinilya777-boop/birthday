@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: 'DoWorkHere — Нужна помощь? Кто-то сделает',
   description: 'DoWorkHere (DWH) — маркетплейс разовых задач. Создай заказ и найди человека рядом.',
   icons: {
-    icon: '/brand/app-icon.svg'
+    icon: '/brand/app-icon.png'
   }
 };
 

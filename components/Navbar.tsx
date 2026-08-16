@@ -5,7 +5,8 @@ import BrandBanner from './brand/BrandBanner';
 import { useSession } from 'next-auth/react';
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const sessionHook = useSession();
+  const session = (sessionHook as any)?.data;
   return (
     <nav className="w-full border-b bg-white/5 backdrop-blur-sm">
       <div className="max-w-4xl mx-auto flex items-center justify-between p-4">

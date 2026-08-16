@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-export default function AppIcon({ src = '/brand/app-icon.svg', alt = 'DWH' }: { src?: string; alt?: string }) {
+export default function AppIcon({ src = '/brand/app-icon.png', alt = 'DWH' }: { src?: string; alt?: string }) {
   return (
     <div className="flex items-center justify-center">
       <div className="app-icon" style={{ width: 290, height: 225 }}>
