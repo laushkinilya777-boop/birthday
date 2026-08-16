@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../lib/auth';
 import { prisma } from '../../lib/prisma';
 import Link from 'next/link';
+import SignOutClient from './SignOutClient';
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions as any);
@@ -37,6 +38,9 @@ export default async function ProfilePage() {
         <div className="flex gap-3">
           <Link href="/orders/create" className="rounded-md bg-indigo-600 px-4 py-2 text-white">Создать заказ</Link>
           <Link href="/" className="rounded-md border px-4 py-2">На главную</Link>
+        </div>
+        <div className="mt-4">
+          <SignOutClient />
         </div>
       </div>
     </div>

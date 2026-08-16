@@ -2,6 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 
 export default function SignUpPage() {
   const { register, handleSubmit } = useForm();
@@ -12,8 +13,13 @@ export default function SignUpPage() {
       const res = await fetch('/api/auth/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
       const json = await res.json();
       if (res.ok) {
-        alert('Регистрация успешна. Войдите в систему.');
-        router.push('/auth/signin');
+        // auto sign-in after signup
+        const signInRes: any = await signIn('credentials', { redirect: false, email: data.email, password: data.password });
+        if (signInRes && !signInRes.error) {
+          router.push('/orders');
+        } else {
+          router.push('/auth/signin');
+        }
       } else {
         alert(json.error || 'Ошибка регистрации');
       }

@@ -26,11 +26,19 @@ export async function GET() {
   }
 }
 
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../../../lib/auth';
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const parsed = CreateSchema.parse(body);
-    // For now author will be null — client should set authorId or we will later use session
+
+    const session = await getServerSession(authOptions as any);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const order = await prisma.order.create({ data: {
       title: parsed.title,
       description: parsed.description,
@@ -40,7 +48,8 @@ export async function POST(req: Request) {
       city: parsed.city,
       district: parsed.district,
       address: parsed.address,
-      urgency: parsed.urgency || 'NORMAL'
+      urgency: parsed.urgency || 'NORMAL',
+      authorId: session.user.id as string
     } });
     return NextResponse.json(order);
   } catch (err) {
