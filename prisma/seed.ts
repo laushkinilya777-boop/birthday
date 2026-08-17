@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { formatCategory } from '../lib/categories';
 
 const prisma = new PrismaClient();
 
@@ -24,11 +25,11 @@ async function main() {
   ]);
 
   const orders = await Promise.all([
-    prisma.order.create({ data: { title: 'Вынести 5 шкафов', description: 'Нужно вынести 5 шкафов из квартиры. 4 этаж, лифта нет.', category: 'Переезд', price: 25000, workersNeeded: 2, city: 'Караганда', authorId: users[0].id } }),
-    prisma.order.create({ data: { title: 'Разгрузить газель', description: 'Разгрузка газели на складе', category: 'Перевозки', price: 12000, workersNeeded: 2, city: 'Караганда', authorId: users[1].id } }),
-    prisma.order.create({ data: { title: 'Собрать шкаф', description: 'Собрать мебель из комплекта', category: 'Сборка и монтаж', price: 8000, workersNeeded: 1, city: 'Караганда', authorId: users[2].id } }),
-    prisma.order.create({ data: { title: 'Покосить траву', description: 'Покосить газон на участке', category: 'Участок и двор', price: 12000, workersNeeded: 1, city: 'Караганда', authorId: users[3].id } }),
-    prisma.order.create({ data: { title: 'Помочь с переездом', description: 'Перевозка вещей', category: 'Переезд', price: 20000, workersNeeded: 2, city: 'Караганда', authorId: users[4].id } }),
+    prisma.order.create({ data: { title: 'Вынести 5 шкафов', description: 'Нужно вынести 5 шкафов из квартиры. 4 этаж, лифта нет.', category: formatCategory('movers', 'moving'), price: 25000, workersNeeded: 2, city: 'Караганда', authorId: users[0].id } }),
+    prisma.order.create({ data: { title: 'Разгрузить газель', description: 'Разгрузка газели на складе', category: formatCategory('movers', 'unloading'), price: 12000, workersNeeded: 2, city: 'Караганда', authorId: users[1].id } }),
+    prisma.order.create({ data: { title: 'Собрать шкаф', description: 'Собрать мебель из комплекта', category: formatCategory('home-help', 'assembly'), price: 8000, workersNeeded: 1, city: 'Караганда', authorId: users[2].id } }),
+    prisma.order.create({ data: { title: 'Покосить траву', description: 'Покосить газон на участке', category: formatCategory('garden', 'lawn'), price: 12000, workersNeeded: 1, city: 'Караганда', authorId: users[3].id } }),
+    prisma.order.create({ data: { title: 'Маникюр на дому', description: 'Нужен маникюр с покрытием гель-лак', category: formatCategory('beauty', 'home-manicure'), price: 8000, workersNeeded: 1, city: 'Караганда', authorId: users[4].id } }),
   ]);
 
   // applications
