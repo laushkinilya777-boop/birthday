@@ -49,6 +49,8 @@ export async function POST(req: Request) {
       city: parsed.city,
       district: parsed.district,
       address: parsed.address,
+      date: parsed.date ? new Date(parsed.date) : undefined,
+      time: parsed.time,
       urgency: parsed.urgency || 'NORMAL',
       authorId: userId
     } });

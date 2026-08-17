@@ -17,6 +17,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 });
 
     if (order.authorId === userId) return NextResponse.json({ error: 'Cannot apply to your own order' }, { status: 400 });
+    if (order.status !== 'OPEN') return NextResponse.json({ error: 'Applications are closed for this order' }, { status: 400 });
 
     const existing = await prisma.application.findFirst({ where: { orderId, userId } });
     if (existing) return NextResponse.json({ error: 'You already applied' }, { status: 400 });
