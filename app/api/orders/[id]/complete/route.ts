@@ -17,7 +17,10 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     if (order.authorId !== userId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-    // If review payload is provided and order is already COMPLETED or will be completed now, allow creating review
+    if (order.status !== 'IN_PROGRESS' && order.status !== 'COMPLETED') {
+      return NextResponse.json({ error: 'Only an in-progress or completed order can be completed or reviewed' }, { status: 400 });
+    }
+
     let updatedOrder = order;
 
     if (order.status === 'IN_PROGRESS') {

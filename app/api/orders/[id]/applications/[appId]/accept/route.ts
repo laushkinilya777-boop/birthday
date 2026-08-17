@@ -19,6 +19,8 @@ export async function POST(req: Request, { params }: { params: { id: string; app
 
     const application = await prisma.application.findUnique({ where: { id: appId } });
     if (!application) return NextResponse.json({ error: 'Application not found' }, { status: 404 });
+    if (application.orderId !== orderId) return NextResponse.json({ error: 'Application does not belong to this order' }, { status: 400 });
+    if (application.status !== 'PENDING') return NextResponse.json({ error: 'Application is no longer pending' }, { status: 400 });
 
     if (application.userId === order.authorId) return NextResponse.json({ error: 'Cannot accept your own application' }, { status: 400 });
 
@@ -26,7 +28,7 @@ export async function POST(req: Request, { params }: { params: { id: string; app
     const updatedApp = await prisma.$transaction(async (tx) => {
       await tx.application.updateMany({ where: { orderId, id: { not: appId } }, data: { status: 'REJECTED' } });
       const app = await tx.application.update({ where: { id: appId }, data: { status: 'ACCEPTED' } });
-      const orderUpdated = await tx.order.update({ where: { id: orderId }, data: { status: 'IN_PROGRESS', workersSelected: 1 } });
+      await tx.order.update({ where: { id: orderId }, data: { status: 'IN_PROGRESS', workersSelected: 1 } });
       return app;
     });
 
