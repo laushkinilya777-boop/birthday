@@ -1,33 +1,3 @@
 'use client';
-
-import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
-import { useForm } from 'react-hook-form';
-
-export default function SignInPage() {
-  const { register, handleSubmit } = useForm();
-  const router = useRouter();
-
-  const onSubmit = async (data: any) => {
-    const res = await signIn('credentials', { redirect: false, email: data.email, password: data.password });
-    if (res && !res.error) {
-      router.push('/orders');
-    } else {
-      alert('Ошибка входа');
-    }
-  };
-
-  return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md space-y-4 rounded-lg bg-white/5 p-6 backdrop-blur">
-        <h1 className="text-2xl font-semibold">Вход в DWH</h1>
-        <input {...register('email')} placeholder="Email" className="w-full rounded-md p-3 text-black" />
-        <input {...register('password')} type="password" placeholder="Пароль" className="w-full rounded-md p-3 text-black" />
-        <button type="submit" className="w-full rounded-md bg-indigo-600 px-4 py-3 text-white">Войти</button>
-        <div className="text-center text-sm text-slate-300">
-          Нет аккаунта? <a href="/auth/signup" className="text-indigo-300 underline">Зарегистрироваться</a>
-        </div>
-      </form>
-    </div>
-  );
-}
+import Image from 'next/image'; import Link from 'next/link'; import { useRouter } from 'next/navigation'; import { signIn } from 'next-auth/react'; import { useForm } from 'react-hook-form'; import { useState } from 'react';
+export default function SignInPage(){const{register,handleSubmit}=useForm();const router=useRouter();const[error,setError]=useState('');const onSubmit=async(d:any)=>{setError('');const r=await signIn('credentials',{redirect:false,email:d.email,password:d.password});if(r&&!r.error)router.push('/orders');else setError('Неверный email или пароль.');};const input='mt-2 w-full rounded-xl border border-slate-200 px-3 py-3 outline-none focus:border-orange-400';return <div className="relative grid min-h-[calc(100vh-64px)] place-items-center overflow-hidden px-4 py-10"><div className="absolute -left-32 top-0 h-72 w-72 rounded-full bg-orange-100 blur-3xl"/><form onSubmit={handleSubmit(onSubmit)} className="relative w-full max-w-md rounded-3xl border border-slate-200 bg-white p-7 shadow-xl shadow-slate-200/60"><Image src="/brand/logo-banner.png" alt="DoWorkHere" width={418} height={218} className="h-16 w-32 object-contain" priority/><h1 className="mt-5 text-2xl font-black">С возвращением</h1><p className="mt-2 text-sm text-slate-500">Войдите, чтобы создавать задачи и откликаться на них.</p>{error&&<p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}<label className="mt-6 block text-sm font-bold">Email<input required type="email" {...register('email')} className={input}/></label><label className="mt-4 block text-sm font-bold">Пароль<input required type="password" {...register('password')} className={input}/></label><button className="mt-6 w-full rounded-xl bg-slate-900 py-3.5 font-bold text-white hover:bg-slate-700">Войти в DWH</button><p className="mt-5 text-center text-sm text-slate-500">Нет аккаунта? <Link href="/auth/signup" className="font-bold text-blue-700">Регистрация</Link></p></form></div>}
