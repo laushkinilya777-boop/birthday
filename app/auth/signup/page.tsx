@@ -2,106 +2,24 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
-type SignUpForm = {
-  name: string;
-  email: string;
-  password: string;
-};
-
 export default function SignUpPage() {
-  const { register, handleSubmit } = useForm<SignUpForm>();
-  const router = useRouter();
+  const { register, handleSubmit } = useForm<{ name: string; email: string; password: string }>();
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const onSubmit = async (data: SignUpForm) => {
-    setError('');
-    setLoading(true);
+  const [submitting, setSubmitting] = useState(false);
+  const onSubmit = async (data: { name: string; email: string; password: string }) => {
+    setError(''); setSubmitting(true);
     try {
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      const json = await res.json();
-      if (!res.ok) {
-        setError(json.error || 'Не удалось создать аккаунт.');
-        return;
-      }
-
-      const auth = await signIn('credentials', {
-        redirect: false,
-        email: data.email,
-        password: data.password,
-      });
-
-      if (auth?.ok) {
-        router.refresh();
-        router.push('/profile');
-        return;
-      }
-
-      setError('Аккаунт создан, но не удалось войти. Попробуйте войти вручную.');
-    } catch {
-      setError('Ошибка соединения.');
-    } finally {
-      setLoading(false);
-    }
+      const response = await fetch('/api/auth/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      const json = await response.json();
+      if (!response.ok) { setError(json.error || 'Не удалось создать аккаунт.'); setSubmitting(false); return; }
+      // NextAuth performs a full redirect only after the session cookie is written.
+      await signIn('credentials', { email: data.email, password: data.password, callbackUrl: '/profile' });
+    } catch { setError('Ошибка соединения.'); setSubmitting(false); }
   };
-
-  const input =
-    'mt-2 w-full rounded-xl border border-slate-200 px-3 py-3 outline-none focus:border-orange-400';
-
-  return (
-    <div className="relative grid min-h-[calc(100vh-64px)] place-items-center overflow-hidden px-4 py-10">
-      <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl" />
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="relative w-full max-w-md rounded-3xl border border-slate-200 bg-white p-7 shadow-xl shadow-slate-200/60"
-      >
-        <Image
-          src="/brand/logo-banner.png"
-          alt="DoWorkHere"
-          width={418}
-          height={218}
-          className="h-16 w-32 object-contain"
-          priority
-        />
-        <h1 className="mt-5 text-2xl font-black">Создайте аккаунт</h1>
-        <p className="mt-2 text-sm text-slate-500">Находите работу или исполнителей рядом.</p>
-        {error && (
-          <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>
-        )}
-        <label className="mt-6 block text-sm font-bold">
-          Имя
-          <input required {...register('name')} className={input} />
-        </label>
-        <label className="mt-4 block text-sm font-bold">
-          Email
-          <input required type="email" {...register('email')} className={input} />
-        </label>
-        <label className="mt-4 block text-sm font-bold">
-          Пароль
-          <input required minLength={6} type="password" {...register('password')} className={input} />
-        </label>
-        <button
-          disabled={loading}
-          className="mt-6 w-full rounded-xl bg-slate-900 py-3.5 font-bold text-white hover:bg-slate-700 disabled:opacity-60"
-        >
-          {loading ? 'Создаём аккаунт…' : 'Создать аккаунт'}
-        </button>
-        <p className="mt-5 text-center text-sm text-slate-500">
-          Уже есть аккаунт?{' '}
-          <Link href="/auth/signin" className="font-bold text-blue-700">
-            Войти
-          </Link>
-        </p>
-      </form>
-    </div>
-  );
+  const input = 'mt-2 w-full rounded-xl border border-slate-200 px-3 py-3 outline-none focus:border-orange-400';
+  return <div className="relative grid min-h-[calc(100vh-64px)] place-items-center overflow-hidden px-4 py-10"><div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-blue-100 blur-3xl"/><form onSubmit={handleSubmit(onSubmit)} className="relative w-full max-w-md rounded-3xl border border-slate-200 bg-white p-7 shadow-xl shadow-slate-200/60"><Image src="/brand/logo-banner.png" alt="DoWorkHere" width={418} height={218} className="h-16 w-32 object-contain" priority/><h1 className="mt-5 text-2xl font-black">Создайте аккаунт</h1><p className="mt-2 text-sm text-slate-500">Находите работу или исполнителей рядом.</p>{error&&<p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}<label className="mt-6 block text-sm font-bold">Имя<input required {...register('name')} className={input}/></label><label className="mt-4 block text-sm font-bold">Email<input required type="email" {...register('email')} className={input}/></label><label className="mt-4 block text-sm font-bold">Пароль<input required minLength={6} type="password" {...register('password')} className={input}/></label><button disabled={submitting} className="mt-6 w-full rounded-xl bg-slate-900 py-3.5 font-bold text-white hover:bg-slate-700 disabled:opacity-60">{submitting ? 'Создаём аккаунт…' : 'Создать аккаунт'}</button><p className="mt-5 text-center text-sm text-slate-500">Уже есть аккаунт? <Link href="/auth/signin" className="font-bold text-blue-700">Войти</Link></p></form></div>;
 }
