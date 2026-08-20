@@ -11,6 +11,14 @@
         "/^npm install --save-dev eslint-config-next@14\\.2\\.5$/": {
             "approve": true,
             "matchCommandLine": true
+        },
+        "/^git add README\\.md \\.env\\.local\\.example; git status --short; git commit -m \"Fix signup flow and Resend env setup\" -m \"Co-authored-by: Copilot <223556219\\+Copilot@users\\.noreply\\.github\\.com>\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^git checkout -b dwh-mvp$/": {
+            "approve": true,
+            "matchCommandLine": true
         }
     }
 }
